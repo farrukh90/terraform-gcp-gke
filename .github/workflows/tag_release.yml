@@ -4,7 +4,7 @@ on:
   push: 
     branches:
     - main 
-    
+
   workflow_dispatch:
   
 permissions:
@@ -34,3 +34,11 @@ jobs:
 
           git tag "$NEXT"
           git push origin "$NEXT"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.tag.outputs.tag }}" \
+            --title "Release ${{ steps.tag.outputs.tag }}" \
+            --generate-notes
