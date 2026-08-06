@@ -1,17 +1,16 @@
-name: Auto Tag
+name: Auto Release
 
 on:
-  push: 
+  push:
     branches:
-    - main 
-
+      - main
   workflow_dispatch:
-  
+
 permissions:
   contents: write
 
 jobs:
-  tag:
+  release:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,7 +18,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create next tag
+      - name: Create Tag and Release
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           LATEST=$(git tag --sort=-v:refname | head -n 1)
 
@@ -35,10 +36,8 @@ jobs:
           git tag "$NEXT"
           git push origin "$NEXT"
 
-      - name: Create GitHub Release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release create "${{ steps.tag.outputs.tag }}" \
-            --title "Release ${{ steps.tag.outputs.tag }}" \
+          echo "Creating release: $NEXT"
+
+          gh release create "$NEXT" \
+            --title "Release $NEXT" \
             --generate-notes
