@@ -23,3 +23,4 @@ terraform init
 terraform apply
 ```
 # trigger actions
+test push
