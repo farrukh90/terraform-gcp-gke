@@ -5,7 +5,8 @@ on:
     branches:
       - main
       - new
-
+  workflow_dispatch:
+  
 permissions:
   contents: write
 
