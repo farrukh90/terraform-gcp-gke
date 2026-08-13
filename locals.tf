@@ -10,5 +10,6 @@ locals {
     "cloudresourcemanager.googleapis.com",
     "containeranalysis.googleapis.com",
     "run.googleapis.com",
+    "iam.googleapis.com",
   ]
 }
