@@ -72,6 +72,7 @@ resource "google_container_node_pool" "primary_nodes" {
 resource "null_resource" "set_kubeconfig" {
   depends_on = [
     google_container_cluster.primary,
+    google_container_node_pool.primary_nodes
   ]
 
   triggers = {
@@ -81,6 +82,14 @@ resource "null_resource" "set_kubeconfig" {
   }
 
   provisioner "local-exec" {
-    command = "gcloud container clusters get-credentials ${var.gke_config["cluster_name"]} --location ${var.gke_config["location"]} --project ${data.google_client_config.current.project}"
+    command = <<EOF
+      gcloud container clusters get-credentials ${var.gke_config["cluster_name"]} --location ${var.gke_config["location"]} --project ${data.google_client_config.current.project}
+      echo "Waiting for Kubernetes API to be ready..."
+      until kubectl get nodes; do
+        echo "API not ready yet, sleeping 5s..."
+        sleep 5
+      done
+      echo "Kubernetes API is ready!"
+    EOF
   }
 }
