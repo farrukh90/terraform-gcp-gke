@@ -11,5 +11,6 @@ locals {
     "containeranalysis.googleapis.com",
     "run.googleapis.com",
     "iam.googleapis.com",
+    "secretmanager.googleapis.com",
   ]
 }
